@@ -53,15 +53,16 @@ class Lexer:
         if self.char == "":
             return Token(TokenT.EOF, "")        #check for end of file
         
-        # if not end of file then label 
+        # if not end of file then label
+        if self.char.isalpha():                 # checking for words (identifiers and keywords)
+            return self.read_word()
+
         if self.char in SEPARATORS:
             tok = Token(TokenT.SEPARATOR, self.char)
-        if self.char in OPERATORS:
+        elif self.char in OPERATORS:
             tok = Token(TokenT.OPERATOR, self.char)
-        if self.char.isalpha():
-            return self.read_word()
         else:
             tok = Token(TokenT.UNKNOWN, self.char)
-        self.read_char()
-        
+
+        self.read_char()            # just keep moving
         return tok
