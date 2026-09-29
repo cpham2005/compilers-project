@@ -35,12 +35,12 @@ class Lexer:
 
     def read_word(self):
         text = ""           # place to store word
-        while self.char != "" and self.char.isalnum():      # find where word start
+        while self.char != "" and self.char.isalnum():      # find where word start; alphanumeric
             text += self.char           # start adding characters of word to text
             self.read_char()            # keep moving
         if text in KEYWORDS:
             return Token(TokenT.KEYWORD, text)
-        return Token(TokenT.IDENTIFIER)
+        return Token(TokenT.IDENTIFIER, text)
 
     def skip_space(self):
         while self.char != "" and self.char.isspace():  #skip whitespace
@@ -56,10 +56,10 @@ class Lexer:
         # if not end of file then label 
         if self.char in SEPARATORS:
             tok = Token(TokenT.SEPARATOR, self.char)
-        elif self.char in OPERATORS:
+        if self.char in OPERATORS:
             tok = Token(TokenT.OPERATOR, self.char)
-        elif self.char in KEYWORDS:
-            tok = Token(TokenT.KEYWORD, self.char)
+        if self.char.isalpha():
+            return self.read_word()
         else:
             tok = Token(TokenT.UNKNOWN, self.char)
         self.read_char()
