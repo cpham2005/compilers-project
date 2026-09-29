@@ -3,9 +3,13 @@ from enum import Enum
 class TokenT(Enum):
     EOF = "EOF"         # end of file
     SEPARATOR = "SEPARATOR"
+    OPERATOR = "OPERATOR"
+    KEYWORD = "KEYWORD"
     UNKNOWN = "UNKNOWN"         # unrecognizable
 
 SEPARATORS = {";", "(", ")", "@", ","}
+OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
+KEYWORD = {"true", "false", "if", "put", "return", "get", "integer", "Boolean", "real", "while", "fi", "else"}
 
 class Token:
     def __init__(self, type, value):
@@ -39,8 +43,12 @@ class Lexer:
             return Token(TokenT.EOF, "")        #check for end of file
         
         # if not end of file then label 
-        elif self.char in SEPARATORS:
+        if self.char in SEPARATORS:
             tok = Token(TokenT.SEPARATOR, self.char)
+        elif self.char in OPERATORS:
+            tok = Token(TokenT.OPERATOR, self.char)
+        elif self.char in KEYWORDS:
+            tok = Token(TokenT.KEYWORD, self.char)
         else:
             tok = Token(TokenT.UNKNOWN, self.char)
         self.read_char()
