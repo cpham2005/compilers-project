@@ -5,11 +5,13 @@ class TokenT(Enum):
     SEPARATOR = "SEPARATOR"
     OPERATOR = "OPERATOR"
     KEYWORD = "KEYWORD"
+    IDENTIFIER = "IDENTIFIER"
     UNKNOWN = "UNKNOWN"         # unrecognizable
 
 SEPARATORS = {";", "(", ")", "@", ","}
 OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
-KEYWORD = {"true", "false", "if", "put", "return", "get", "integer", "Boolean", "real", "while", "fi", "else"}
+KEYWORDS = {"true", "false", "if", "put", "return", "get", "integer",
+            "Boolean", "real", "while", "fi", "else"}
 
 class Token:
     def __init__(self, type, value):
@@ -30,6 +32,15 @@ class Lexer:
         else:
             self.char = self.source[self.pos]     #character is what the code is in that pos
             self.pos += 1           # move position one over (should i separate update/read and moving)
+
+    def read_word(self):
+        text = ""           # place to store word
+        while self.char != "" and self.char.isalnum():      # find where word start
+            text += self.char           # start adding characters of word to text
+            self.read_char()            # keep moving
+        if text in KEYWORDS:
+            return Token(TokenT.KEYWORD, text)
+        return Token(TokenT.IDENTIFIER)
 
     def skip_space(self):
         while self.char != "" and self.char.isspace():  #skip whitespace
