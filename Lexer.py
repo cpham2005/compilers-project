@@ -46,6 +46,24 @@ class Lexer:
         while self.char != "" and self.char.isspace():  #skip whitespace
             self.read_char()
 
+    def read_number(self):
+        text = ""
+        while self.char != "" and self.char.isdigit():
+            text += self.char
+            self.read_char()
+        if self.char == ".":
+            text += self.char
+            self.read_char()
+            if self.char == "" or not self.char.isdigit():
+                return Token(TokenT.UNKNOWN, text)
+
+            while self.char != "" and self.char.isdigit():
+                text += self.char
+                self.read_char()
+        if "." in text:
+            return Token(TokenT.REAL, text)
+        return Token(TokenT.INTEGER, text)
+
 # looping and labeling characters
     def next_token(self):
         self.skip_space()   # default skip whitespace
@@ -56,6 +74,9 @@ class Lexer:
         # if not end of file then label
         if self.char.isalpha():                 # checking for words (identifiers and keywords)
             return self.read_word()
+
+        if self.char.isdigit() or self.char == ".":     #check for real and interger
+            return self.read_number()
 
         if self.char in SEPARATORS:
             tok = Token(TokenT.SEPARATOR, self.char)
