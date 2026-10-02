@@ -7,8 +7,10 @@ class TokenT(Enum):
     KEYWORD = "KEYWORD"
     IDENTIFIER = "IDENTIFIER"
     UNKNOWN = "UNKNOWN"         # unrecognizable
+    INTEGER = "INTEGER"
+    REAL = "REAL"
 
-SEPARATORS = {";", "(", ")", "@", ","}
+SEPARATORS = {":", ";", "(", ")", "@", ","}
 OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
 KEYWORDS = {"true", "false", "if", "put", "return", "get", "integer",
             "Boolean", "real", "while", "fi", "else"}
