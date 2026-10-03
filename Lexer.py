@@ -45,16 +45,23 @@ class Lexer:
         return Token(TokenT.IDENTIFIER, text)
 
     def read_operator(self):
-        c = self.char       # save current character
+        initial = self.char       # save current character
         self.read_char()    #before moving^
 
-        if c in ("=", "!", "<", ">") and self.char == "=":  # manually check only operators char > 1
+        if initial in ("=", "!", "<", ">") and self.char == "=":  # manually check only operators 
             self.read_char()
-            return Token(TokenT.OPERATOR, c + "=")      # return prev char and = 
+            return Token(TokenT.OPERATOR, initial + "=")      # return prev char and = 
         
-        if c in ("<", ">", "+", "-", "*", "/", "="):
-            return Token(TokenT.OPERATOR, c)
-        return Token(TokenT.UNKNOWN, c)      # come back when working on comments
+        if initial in ("<", ">", "+", "-", "*", "/", "="):
+            return Token(TokenT.OPERATOR, initial)
+
+        if initial == "!":
+            while self.char != "" and self.char != "!":     # comments enclosed with ! are skipped
+                self.read_char()        # skip character inside !
+            self.read_char()            # skip the last !
+            return self.next_token()    # return no name token since comment are not labeled
+            
+        return Token(TokenT.UNKNOWN, initial)      # come back when working on comments
 
     def skip_space(self):
         while self.char != "" and self.char.isspace():  #skip whitespace
