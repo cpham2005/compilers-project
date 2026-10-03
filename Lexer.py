@@ -10,7 +10,7 @@ class TokenT(Enum):
     INTEGER = "INTEGER"
     REAL = "REAL"
 
-SEPARATORS = {":", ";", "(", ")", "@", ",", "_"}
+SEPARATORS = {":", ";", "(", ")", "@", ",", "_", "{", "}"}
 OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
 KEYWORDS = {"true", "false", "if", "put", "return", "get", "integer",
             "Boolean", "real", "while", "fi", "else"}
@@ -52,7 +52,7 @@ class Lexer:
             self.read_char()
             return Token(TokenT.OPERATOR, c + "=")      # return prev char and = 
         
-        if c in ("<", ">", "+", "-", "*", "/"):
+        if c in ("<", ">", "+", "-", "*", "/", "="):
             return Token(TokenT.OPERATOR, c)
         return Token(TokenT.UNKNOWN, c)      # come back when working on comments
 
