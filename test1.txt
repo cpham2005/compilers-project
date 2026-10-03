@@ -1,0 +1,6 @@
+
+test_function(x, y):
+    if (x >= y) {
+        return False
+    }
+    return True

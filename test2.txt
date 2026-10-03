@@ -1,0 +1,15 @@
+hello321
+schOol
+one two three
+1password1
+sixty_Six
+0.123
+.321
+107.3
+1738
+h@ll0
+while (x < 15):
+    x = x + 1
+100.
+4.4.4
+_@/<
