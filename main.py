@@ -1,17 +1,21 @@
 from Lexer import *
 
 def main():
-    test1 = "test2.txt"
-    with open(test1, "r") as file:
-        sourcecode = file.read()
+    tests = [("test1.txt", "output1.txt"), ("test2.txt", "output2.txt"), ("test3.txt", "output3.txt")]
 
-    lexer = Lexer(sourcecode)
+    for test, output in tests:
+        with open(test, "r") as file:
+            sourcecode = file.read()
 
-    while True:
-        token = lexer.next_token()
-        if token.type == TokenT.EOF:
-            break
-        print(token.type.value, token.value)
+        lexer = Lexer(sourcecode)
+
+        with open(output, "w") as file:
+            while True:
+                token = lexer.next_token()
+                if token.type == TokenT.EOF:
+                    break
+
+                file.write(f"{token.type.value} {token.value}\n")
 
 if __name__ == "__main__":
     main()
