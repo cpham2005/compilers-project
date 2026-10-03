@@ -54,6 +54,13 @@ class Lexer:
         
         if c in ("<", ">", "+", "-", "*", "/", "="):
             return Token(TokenT.OPERATOR, c)
+
+        if c == "!":
+            while self.char != "" and self.char != "!":     # comments enclosed with ! are skipped
+                self.read_char()        # skip character inside !
+            self.read_char()            # skip the last !
+            return self.next_token()    # return no name token since comment are not labeled
+            
         return Token(TokenT.UNKNOWN, c)      # come back when working on comments
 
     def skip_space(self):
