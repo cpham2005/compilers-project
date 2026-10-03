@@ -34,6 +34,10 @@ class Lexer:
         else:
             self.char = self.source[self.pos]     #character is what the code is in that pos
             self.pos += 1           # move position one over (should i separate update/read and moving)
+    
+    def skip_space(self):
+        while self.char != "" and self.char.isspace():  #skip whitespace
+            self.read_char()
 
     def read_word(self):
         text = ""           # place to store word
@@ -43,30 +47,7 @@ class Lexer:
         if text in KEYWORDS:
             return Token(TokenT.KEYWORD, text)
         return Token(TokenT.IDENTIFIER, text)
-
-    def read_operator(self):
-        initial = self.char       # save current character
-        self.read_char()    #before moving^
-
-        if initial in ("=", "!", "<", ">") and self.char == "=":  # manually check only operators 
-            self.read_char()
-            return Token(TokenT.OPERATOR, initial + "=")      # return prev char and = 
-        
-        if initial in ("<", ">", "+", "-", "*", "/", "="):
-            return Token(TokenT.OPERATOR, initial)
-
-        if initial == "!":
-            while self.char != "" and self.char != "!":     # comments enclosed with ! are skipped
-                self.read_char()        # skip character inside !
-            self.read_char()            # skip the last !
-            return self.next_token()    # return no name token since comment are not labeled
-            
-        return Token(TokenT.UNKNOWN, initial)      # come back when working on comments
-
-    def skip_space(self):
-        while self.char != "" and self.char.isspace():  #skip whitespace
-            self.read_char()
-
+    
     def read_number(self):
         text = ""
         while self.char != "" and self.char.isdigit():
@@ -84,6 +65,23 @@ class Lexer:
         if "." in text:
             return Token(TokenT.REAL, text)
         return Token(TokenT.INTEGER, text)
+
+    def read_operator(self):
+        initial = self.char       # save current character
+        self.read_char()    #before moving^
+
+        if initial in ("=", "!", "<", ">") and self.char == "=":  # manually check only operators 
+            self.read_char()
+            return Token(TokenT.OPERATOR, initial + "=")      # return prev char and = 
+        
+        if initial in ("<", ">", "+", "-", "*", "/", "="):
+            return Token(TokenT.OPERATOR, initial)
+
+        if initial == "!":
+            while self.char != "" and self.char != "!":     # comments enclosed with ! are skipped
+                self.read_char()        # skip character inside !
+            self.read_char()            # skip the last !
+            return self.next_token()    # return no name token since comment are not labeled
 
 # looping and labeling characters
     def next_token(self):
