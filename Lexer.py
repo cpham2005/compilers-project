@@ -10,7 +10,7 @@ class TokenT(Enum):
     INTEGER = "INTEGER"
     REAL = "REAL"
 
-SEPARATORS = {":", ";", "(", ")", "@", ","}
+SEPARATORS = {":", ";", "(", ")", "@", ",", "_"}
 OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
 KEYWORDS = {"true", "false", "if", "put", "return", "get", "integer",
             "Boolean", "real", "while", "fi", "else"}
@@ -43,6 +43,18 @@ class Lexer:
         if text in KEYWORDS:
             return Token(TokenT.KEYWORD, text)
         return Token(TokenT.IDENTIFIER, text)
+
+    def read_operator(self):
+        c = self.char       # save current character
+        self.read_char()    #before moving^
+
+        if c in ("=", "!", "<", ">") and self.char == "=":  # manually check only operators char > 1
+            self.read_char()
+            return Token(TokenT.OPERATOR, c + "=")      # return prev char and = 
+        
+        if c in ("<", ">", "+", "-", "*", "/"):
+            return Token(TokenT.OPERATOR, c)
+        return Token(TokenT.UNKNOWN, c)      # come back when working on comments
 
     def skip_space(self):
         while self.char != "" and self.char.isspace():  #skip whitespace
@@ -80,10 +92,11 @@ class Lexer:
         if self.char.isdigit() or self.char == ".":     #check for real and interger
             return self.read_number()
 
+        if self.char in ("=", "!", "<", ">", "+", "-", "*", "/"):
+            return self.read_operator()
+
         if self.char in SEPARATORS:
             tok = Token(TokenT.SEPARATOR, self.char)
-        elif self.char in OPERATORS:
-            tok = Token(TokenT.OPERATOR, self.char)
         else:
             tok = Token(TokenT.UNKNOWN, self.char)
 
