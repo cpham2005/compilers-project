@@ -41,7 +41,7 @@ class Lexer:
 
     def read_word(self):
         text = ""           # place to store word
-        while self.char != "" and self.char.isalnum():      # find where word start; alphanumeric
+        while self.char != "" and (self.char.isalnum() or self.char == "_"):      # find where word start; alphanumeric
             text += self.char           # start adding characters of word to text
             self.read_char()            # keep moving
         if text in KEYWORDS:
@@ -91,7 +91,7 @@ class Lexer:
             return Token(TokenT.EOF, "")        #check for end of file
         
         # if not end of file then label
-        if self.char.isalpha():                 # checking for words (identifiers and keywords)
+        if self.char.isalpha() or self.char == "_":                 # checking for words (identifiers and keywords)
             return self.read_word()
 
         if self.char.isdigit() or self.char == ".":     #check for real and interger
