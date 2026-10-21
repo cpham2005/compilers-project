@@ -91,7 +91,7 @@ class Lexer:
             return Token(TokenT.EOF, "")        #check for end of file
         
         # if not end of file then label
-        if self.char.isalpha() or self.char == "_":                 # checking for words (identifiers and keywords)
+        if self.char.isalpha():                 # checking for words (identifiers and keywords)
             return self.read_word()
 
         if self.char.isdigit() or self.char == ".":     #check for real and interger
