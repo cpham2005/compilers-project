@@ -1,5 +1,5 @@
 test_function(x, y):
     if (x >= y) {
-        return False
+        return False        ! make sure to return False if statement is true !
     }
     return True
