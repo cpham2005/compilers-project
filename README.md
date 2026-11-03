@@ -8,3 +8,9 @@
 <Identifier> - is a sequence of letters, digits, or "_". However, the first character must be a letter. Upper and lower cases are same.
 <Integer> is an unsigned decimal integer i.e., a sequence of decimal digits.
 <Real> is an optional integer followed by "." and Integer, e.g., 123.00 or .001 but not 123.
+
+## 11/8 Syntax Analyzer (parser)
+- Rewrite grammar Rat26F to remove left recursion
+- print out all productions rules used for analyzing the token
+
+- Error handling: if syntax error occurs, print meaningful error message 
