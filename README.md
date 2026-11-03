@@ -5,9 +5,9 @@
 - Blanks, tabs and newlines (collectively, "white space") are ignored except as they serve to separate tokens.
 - Some white space is required to separate otherwise adjacent identifiers, keywords, reals and integers.
 
-"<Identifier>" - is a sequence of letters, digits, or "_". However, the first character must be a letter. Upper and lower cases are same.
-<Integer> is an unsigned decimal integer i.e., a sequence of decimal digits.
-<Real> is an optional integer followed by "." and Integer, e.g., 123.00 or .001 but not 123.
+'<Identifier>' - is a sequence of letters, digits, or "_". However, the first character must be a letter. Upper and lower cases are same.
+'<Integer>' is an unsigned decimal integer i.e., a sequence of decimal digits.
+'<Real>' is an optional integer followed by "." and Integer, e.g., 123.00 or .001 but not 123.
 
 ## 11/8 Syntax Analyzer (parser)
 - Rewrite grammar Rat26F to remove left recursion
