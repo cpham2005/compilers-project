@@ -152,35 +152,156 @@ class Parser:
 
     # R14
     def statement_list(self):
-        pass
+        self.statement()
+
+        if self.current_token is not None and (self.current_token.type == TokenT.IDENTIFIER or self.current_token.value in ["{", "if", "return", "put", "get", "while"]):
+            self.statement_list()
 
     # R15
     def statement(self):
-        pass
+        if self.current_token.type == TokenT.IDENTIFIER:
+            self.assign()
+        elif self.current_token.value == "{":
+            self.compound()
+        elif self.current_token.value == "if":
+            self.p_if()
+        elif self.current_token.value == "return":
+            self.p_return()
+        elif self.current_token.value == "put":
+            self.p_print()
+        elif self.current_token.value == "get":
+            self.scan()
+        elif self.current_token.value == "while":
+            self.p_while()
+        else:
+            raise SyntaxError("Expected Statement")
 
     # R16
     def compound(self):
-        pass
+        if self.current_token.value =="{":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected {")
+        
+        self.statement_list()
+
+        if self.current_token.value == "}":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected }")
 
     # R17
     def assign(self):
-        pass
+        if self.current_token.type == TokenT.IDENTIFIER:
+            self.next_token()
+        else:
+            raise SyntaxError("Expected identifier")
+
+        if self.current_token.value == "=":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected =")
+
+        self.expression()
+
+        if self.current_token.value == ";":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected ;")
 
     # R18
     def p_if(self):
-        pass
+        if self.current_token.value == "if":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected if")
+
+        if self.current_token.value == "(":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected (")
+
+        self.condition()
+
+        if self.current_token.value == ")":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected )")
+
+        self.statement()
+
+        if self.current_token.value == "else":
+            self.next_token()
+            self.statement()
+
+        if self.current_token.value == "fi":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected fi")
 
     # R19
     def p_return(self):
-        pass
+        if self.current_token.value == "return":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected return")
+
+        if self.current_token.value != ";":
+            self.expression()
+
+        if self.current_token.value == ";":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected ;")
+ 
 
     # R20
-    def print(self):
-        pass
+    def p_print(self):
+        if self.current_token.value == "put":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected put")
+        
+        if self.current_token.value == "(":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected (")
+
+        self.expression()
+
+        if self.current_token.value == ")":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected )")
+
+        if self.current_token.value == ";":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected ;")
 
     # R21
     def scan(self):
-        pass
+        if self.current_token.value == "get":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected get")
+        
+        if self.current_token.value == "(":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected (")
+
+        self.ids()
+
+        if self.current_token.value == ")":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected )")
+
+        if self.current_token.value == ";":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected ;")
 
     # R22
     def p_while(self):
