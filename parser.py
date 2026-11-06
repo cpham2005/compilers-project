@@ -1,4 +1,4 @@
-from lexer import *
+from Lexer import *
 
 class Parser:
     def __init__(self, tokens):
@@ -303,41 +303,120 @@ class Parser:
         else:
             raise SyntaxError("Expected ;")
 
-    # R22
+    # R22: <While> -> while ( <Condition> ) <Statement>
     def p_while(self):
-        pass
+        if self.current_token is not None and self.current_token.value == "while":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected while")
 
-    # R23
+        if self.current_token is not None and self.current_token.value == "(":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected (")
+
+        self.condition()
+
+        if self.current_token is not None and self.current_token.value == ")":
+            self.next_token()
+        else:
+            raise SyntaxError("Expected )")
+
+        if self.current_token is None or self.current_token.type == TokenT.EOF:
+            raise SyntaxError("Expected Statement")
+        self.statement()
+
+    # R23: <Condition> -> <Expression> <Relop> <Expression>
     def condition(self):
-        pass
+        self.expression()
+        self.relop()
+        self.expression()
 
-    # R24
+    # R24: <Relop> -> == | != | > | < | <= | >=
     def relop(self):
-        pass
+        if self.current_token is not None and self.current_token.value in ["==", "!=", ">", "<", "<=", ">="]:
+            self.next_token()
+        else:
+            raise SyntaxError("Expected relational operator")
 
-    # R25a
+    # R25a: <Expression> -> <Term> <Expression Prime>
     def expression(self):
-        pass
+        self.term()
+        self.expression_prime()
 
-    # R25b
+    # R25b: <Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | empty
     def expression_prime(self):
-        pass
-    
-    # R26a
+        if self.current_token is not None and self.current_token.value in ["+", "-"]:
+            self.next_token()
+            self.term()
+            self.expression_prime()
+        else:
+            self.empty()
+
+    # R26a: <Term> -> <Factor> <Term Prime>
     def term(self):
-        pass
+        self.factor()
+        self.term_prime()
 
-    # R26b
+    # R26b: <Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | empty
     def term_prime(self):
-        pass
+        if self.current_token is not None and self.current_token.value in ["*", "/"]:
+            self.next_token()
+            self.factor()
+            self.term_prime()
+        else:
+            self.empty()
 
-    # R27
+    # R27: <Factor> -> - <Primary> | <Primary>
     def factor(self):
-        pass
+        if self.current_token is not None and self.current_token.value == "-":
+            self.next_token()
+        self.primary()
 
-    # R28
+    # R28: <Primary> -> Identifier [ ( <IDs> ) ] | Integer | ( <Expression> ) | Real | true | false
     def primary(self):
-        pass
+        if self.current_token is None:
+            raise SyntaxError("Expected primary")
+
+        if self.current_token.type == TokenT.IDENTIFIER:
+            self.next_token()
+
+            if self.current_token is not None and self.current_token.value == "(":
+                self.next_token()
+
+                # A function call requires a nonempty list of identifiers.
+                # Check EOF here as well as between comma-separated IDs.
+                while True:
+                    if self.current_token is not None and self.current_token.type == TokenT.IDENTIFIER:
+                        self.next_token()
+                    else:
+                        raise SyntaxError("Expected identifier")
+
+                    if self.current_token is not None and self.current_token.value == ",":
+                        self.next_token()
+                    else:
+                        break
+
+                if self.current_token is not None and self.current_token.value == ")":
+                    self.next_token()
+                else:
+                    raise SyntaxError("Expected )")
+
+        elif self.current_token.type in [TokenT.INTEGER, TokenT.REAL]:
+            self.next_token()
+        elif self.current_token.value in ["true", "false"]:
+            self.next_token()
+        elif self.current_token.value == "(":
+            self.next_token()
+            self.expression()
+
+            if self.current_token is not None and self.current_token.value == ")":
+                self.next_token()
+            else:
+                raise SyntaxError("Expected )")
+        else:
+            raise SyntaxError("Expected primary")
+
 
     # R29
     def empty(self):
