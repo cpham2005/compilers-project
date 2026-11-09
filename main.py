@@ -1,4 +1,5 @@
 from Lexer import *
+from parser import *
 
 def main():
     tests = [("test1.txt", "output1.txt"), ("test2.txt", "output2.txt"), ("test3.txt", "output3.txt")]
@@ -8,14 +9,17 @@ def main():
             sourcecode = file.read()
 
         lexer = Lexer(sourcecode)
+        parser = Parser(lexer)
 
+        try:
+            parser.rat26f()
+        except SyntaxError as error:
+            parser.output.append(f"Syntax Error: {error}")
+
+    
         with open(output, "w") as file:
-            while True:
-                token = lexer.next_token()
-                if token.type == TokenT.EOF:
-                    break
-
-                file.write(f"{token.type.value} {token.value}\n")
-
+            for line in parser.output:
+                file.write(line + "\n")
+                
 if __name__ == "__main__":
     main()
