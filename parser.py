@@ -2,16 +2,23 @@ from Lexer import *
 
 class Parser:
     def __init__(self, tokens):
-        self.tokens = tokens
-        self.current_token = None
+        # Accept lexer tokens with or without a final EOF; do not change the caller's list.
+        self.tokens = list(tokens)
+        if not self.tokens or self.tokens[-1].type != TokenT.EOF:
+            self.tokens.append(Token(TokenT.EOF, ""))
+        self.eof_token = self.tokens[-1]
+        self.current_token = self.eof_token
         self.token_index = 0
 
     def next_token(self):
+        # Grammar methods always receive a Token, including at end of input.
         if self.token_index < len(self.tokens):
             self.current_token = self.tokens[self.token_index]
             self.token_index += 1
+            if self.current_token.type == TokenT.EOF and self.token_index < len(self.tokens):
+                raise SyntaxError("Unexpected tokens after EOF")
         else:
-            self.current_token = None
+            self.current_token = self.eof_token
         return self.current_token  
 
     # R1
@@ -20,19 +27,22 @@ class Parser:
 
         self.opt_function_definitions()
 
-        if self.current_token.value == "@" and self.current_token is not None:
+        if self.current_token.value == "@":
             self.next_token()
         else:
             raise SyntaxError("Expected @")
         
         self.opt_declaration_list()
 
-        if self.current_token.value == "@" and self.current_token is not None:
+        if self.current_token.value == "@":
             self.next_token()
         else:
             raise SyntaxError("Expected @")
 
         self.statement_list()
+
+        if self.current_token.type != TokenT.EOF:
+            raise SyntaxError("Expected end of input")
 
     # R2
     def opt_function_definitions(self):
@@ -96,7 +106,7 @@ class Parser:
 
     # R8
     def qualifier(self):
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.next_token()
         else:
             raise SyntaxError("Expected qualifier")
@@ -117,7 +127,7 @@ class Parser:
 
     # R10
     def opt_declaration_list(self):
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.declaration_list()
         else:
             self.empty()
@@ -131,7 +141,7 @@ class Parser:
         else:
             raise SyntaxError("Expected ;")
 
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.declaration_list()
 
     # R12
