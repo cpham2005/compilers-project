@@ -313,7 +313,7 @@ class Parser:
         else:
             raise SyntaxError("Expected ;")
 
-    # R22: <While> -> while ( <Condition> ) <Statement>
+    # R22
     def p_while(self):
         if self.current_token is not None and self.current_token.value == "while":
             self.next_token()
@@ -336,25 +336,25 @@ class Parser:
             raise SyntaxError("Expected Statement")
         self.statement()
 
-    # R23: <Condition> -> <Expression> <Relop> <Expression>
+    # R23
     def condition(self):
         self.expression()
         self.relop()
         self.expression()
 
-    # R24: <Relop> -> == | != | > | < | <= | >=
+    # R24
     def relop(self):
         if self.current_token is not None and self.current_token.value in ["==", "!=", ">", "<", "<=", ">="]:
             self.next_token()
         else:
             raise SyntaxError("Expected relational operator")
 
-    # R25a: <Expression> -> <Term> <Expression Prime>
+    # R25a
     def expression(self):
         self.term()
         self.expression_prime()
 
-    # R25b: <Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | empty
+    # R25b
     def expression_prime(self):
         if self.current_token is not None and self.current_token.value in ["+", "-"]:
             self.next_token()
@@ -363,12 +363,12 @@ class Parser:
         else:
             self.empty()
 
-    # R26a: <Term> -> <Factor> <Term Prime>
+    # R26a
     def term(self):
         self.factor()
         self.term_prime()
 
-    # R26b: <Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | empty
+    # R26b
     def term_prime(self):
         if self.current_token is not None and self.current_token.value in ["*", "/"]:
             self.next_token()
@@ -377,13 +377,13 @@ class Parser:
         else:
             self.empty()
 
-    # R27: <Factor> -> - <Primary> | <Primary>
+    # R27
     def factor(self):
         if self.current_token is not None and self.current_token.value == "-":
             self.next_token()
         self.primary()
 
-    # R28: <Primary> -> Identifier [ ( <IDs> ) ] | Integer | ( <Expression> ) | Real | true | false
+    # R28
     def primary(self):
         if self.current_token is None:
             raise SyntaxError("Expected primary")
@@ -394,8 +394,6 @@ class Parser:
             if self.current_token is not None and self.current_token.value == "(":
                 self.next_token()
 
-                # A function call requires a nonempty list of identifiers.
-                # Check EOF here as well as between comma-separated IDs.
                 while True:
                     if self.current_token is not None and self.current_token.type == TokenT.IDENTIFIER:
                         self.next_token()
