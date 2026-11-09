@@ -1,33 +1,30 @@
-:
-;
-(
-)
-@
-,
+function difference(a, b integer)
 {
+    return a - b;
 }
-==
-!=
->
-<
-<=
->=
-+
--
-*
-/
-=
-true
-false
-if
-put
-return
-get
-integer
-Boolean
-real
-while
-fi
-else
-
-Z12_d_
+@
+integer low, high, step, total;
+boolean ready;
+real ratio;
+@
+get(low, high);
+step = 1;
+total = 0;
+ready = true;
+ratio = -(0.5 + .25);
+while (low <= high)
+{
+    if (low != high)
+    {
+        total = total + difference(high, low);
+        put(total);
+    }
+    else
+    {
+        ready = false;
+    }
+    fi
+    low = low + step;
+}
+put(ready);
+put(ratio);

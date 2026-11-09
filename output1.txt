@@ -1,5 +1,88 @@
-Token: IDENTIFIER Lexeme: test_function
+Token: SEPARATOR Lexeme: @
    <Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> @ <Statement List>
    <Opt Function Definitions> -> <Empty>
    <Empty> -> ε
-Syntax Error: Expected @
+Token: KEYWORD Lexeme: integer
+   <Opt Declaration List> -> <Declaration List>
+   <Declaration> -> <Qualifier> <IDs>
+   <Qualifier> -> integer | boolean | real
+Token: IDENTIFIER Lexeme: a
+Token: SEPARATOR Lexeme: ,
+   <IDs> -> <Identifier> , <IDs>
+Token: IDENTIFIER Lexeme: b
+Token: SEPARATOR Lexeme: ,
+   <IDs> -> <Identifier> , <IDs>
+Token: IDENTIFIER Lexeme: c
+Token: SEPARATOR Lexeme: ;
+   <IDs> -> <Identifier>
+Token: SEPARATOR Lexeme: @
+   <Declaration List> -> <Declaration> ;
+Token: IDENTIFIER Lexeme: b
+   <Statement> -> <Assign>
+   <Assign> -> <Identifier> = <Expression> ;
+Token: OPERATOR Lexeme: =
+Token: INTEGER Lexeme: 2
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+   <Primary> -> <Integer>
+Token: SEPARATOR Lexeme: ;
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: IDENTIFIER Lexeme: c
+   <Statement List> -> <Statement> <Statement List>
+   <Statement> -> <Assign>
+   <Assign> -> <Identifier> = <Expression> ;
+Token: OPERATOR Lexeme: =
+Token: INTEGER Lexeme: 3
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+   <Primary> -> <Integer>
+Token: SEPARATOR Lexeme: ;
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: IDENTIFIER Lexeme: a
+   <Statement List> -> <Statement> <Statement List>
+   <Statement> -> <Assign>
+   <Assign> -> <Identifier> = <Expression> ;
+Token: OPERATOR Lexeme: =
+Token: IDENTIFIER Lexeme: b
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+Token: OPERATOR Lexeme: +
+   <Primary> -> <Identifier>
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> + <Term> <Expression Prime>
+Token: IDENTIFIER Lexeme: c
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+Token: SEPARATOR Lexeme: ;
+   <Primary> -> <Identifier>
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: KEYWORD Lexeme: put
+   <Statement List> -> <Statement> <Statement List>
+   <Statement> -> <Print>
+   <Print> -> put ( <Expression> ) ;
+Token: SEPARATOR Lexeme: (
+Token: IDENTIFIER Lexeme: a
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+Token: SEPARATOR Lexeme: )
+   <Primary> -> <Identifier>
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: SEPARATOR Lexeme: ;
+   <Statement List> -> <Statement>

@@ -1,34 +1,7 @@
-! operator test !
-= != > < <= >= + - * / ==    
-+-*/
-
-! separator 
-     test !
-{ } ;; , () =  @
-
-! keyword test!
-integer  boolean function real  if else fi return put get while 
- true false
-
-
-!integer!
-1 1000 99 00000000000000
-
-!real! 
-234.567 9.000001 000.00  .1234  
-
-!identifier!
-z12_d_ Zzzz  a1z4r  zbc12Mx   x 
-
-!wrong 
-      Tokens!
-  $
-  ___    
-  23rty
-  000.  
-
-
-! valid comment ! integer
-
-! unfinished comment
-
+@
+integer a, b, c;
+@
+b = 2;
+c = 3;
+a = b + c;
+put(a);
