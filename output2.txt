@@ -1,33 +1,57 @@
-IDENTIFIER hello321
-IDENTIFIER schOol
-IDENTIFIER one
-IDENTIFIER two
-IDENTIFIER three
-UNKNOWN 1password1
-IDENTIFIER sixty_Six
-REAL 0.123
-REAL .321
-REAL 107.3
-INTEGER 1738
-IDENTIFIER h
-SEPARATOR @
-IDENTIFIER ll0
-KEYWORD while
-SEPARATOR (
-IDENTIFIER x
-OPERATOR <
-INTEGER 15
-SEPARATOR )
-SEPARATOR :
-IDENTIFIER x
-OPERATOR =
-IDENTIFIER x
-OPERATOR +
-INTEGER 1
-UNKNOWN 100.
-REAL 4.4
-REAL .4
-UNKNOWN _
-SEPARATOR @
-OPERATOR /
-OPERATOR <
+Token: SEPARATOR Lexeme: @
+   <Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> @ <Statement List>
+   <Opt Function Definitions> -> <Empty>
+   <Empty> -> ε
+Token: KEYWORD Lexeme: integer
+   <Opt Declaration List> -> <Declaration List>
+   <Declaration> -> <Qualifier> <IDs>
+   <Qualifier> -> integer | boolean | real
+Token: IDENTIFIER Lexeme: x
+Token: SEPARATOR Lexeme: ;
+   <IDs> -> <Identifier>
+Token: SEPARATOR Lexeme: @
+   <Declaration List> -> <Declaration> ;
+Token: IDENTIFIER Lexeme: x
+   <Statement> -> <Assign>
+   <Assign> -> <Identifier> = <Expression> ;
+Token: OPERATOR Lexeme: =
+Token: INTEGER Lexeme: 10
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+   <Primary> -> <Integer>
+Token: OPERATOR Lexeme: +
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> + <Term> <Expression Prime>
+Token: INTEGER Lexeme: 5
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+   <Primary> -> <Integer>
+Token: SEPARATOR Lexeme: ;
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: KEYWORD Lexeme: put
+   <Statement List> -> <Statement> <Statement List>
+   <Statement> -> <Print>
+   <Print> -> put ( <Expression> ) ;
+Token: SEPARATOR Lexeme: (
+Token: IDENTIFIER Lexeme: x
+   <Expression> -> <Term> <Expression Prime>
+   <Term> -> <Factor> <Term Prime>
+   <Factor> -> <Primary>
+Token: SEPARATOR Lexeme: )
+   <Primary> -> <Identifier>
+   <Term Prime> -> <Empty>
+   <Empty> -> ε
+   <Expression Prime> -> <Empty>
+   <Empty> -> ε
+Token: SEPARATOR Lexeme: ;
+Token: IDENTIFIER Lexeme: schOol
+   <Statement List> -> <Statement> <Statement List>
+   <Statement> -> <Assign>
+   <Assign> -> <Identifier> = <Expression> ;
+Token: IDENTIFIER Lexeme: one
+Syntax Error: Expected =

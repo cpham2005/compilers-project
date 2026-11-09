@@ -1,32 +1,5 @@
-SEPARATOR :
-SEPARATOR ;
-SEPARATOR (
-SEPARATOR )
-SEPARATOR @
-SEPARATOR ,
-SEPARATOR {
-SEPARATOR }
-OPERATOR ==
-OPERATOR !=
-OPERATOR >
-OPERATOR <
-OPERATOR <=
-OPERATOR >=
-OPERATOR +
-OPERATOR -
-OPERATOR *
-OPERATOR /
-OPERATOR =
-KEYWORD true
-KEYWORD false
-KEYWORD if
-KEYWORD put
-KEYWORD return
-KEYWORD get
-KEYWORD integer
-IDENTIFIER Boolean
-KEYWORD real
-KEYWORD while
-KEYWORD fi
-KEYWORD else
-IDENTIFIER Z12_d_
+Token: SEPARATOR Lexeme: :
+   <Rat26F> -> <Opt Function Definitions> @ <Opt Declaration List> @ <Statement List>
+   <Opt Function Definitions> -> <Empty>
+   <Empty> -> ε
+Syntax Error: Expected @
