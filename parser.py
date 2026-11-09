@@ -2,16 +2,23 @@ from Lexer import *
 
 class Parser:
     def __init__(self, tokens):
-        self.tokens = tokens
-        self.current_token = None
+        # Accept lexer tokens with or without a final EOF; do not change the caller's list.
+        self.tokens = list(tokens)
+        if not self.tokens or self.tokens[-1].type != TokenT.EOF:
+            self.tokens.append(Token(TokenT.EOF, ""))
+        self.eof_token = self.tokens[-1]
+        self.current_token = self.eof_token
         self.token_index = 0
 
     def next_token(self):
+        # Grammar methods always receive a Token, including at end of input.
         if self.token_index < len(self.tokens):
             self.current_token = self.tokens[self.token_index]
             self.token_index += 1
+            if self.current_token.type == TokenT.EOF and self.token_index < len(self.tokens):
+                raise SyntaxError("Unexpected tokens after EOF")
         else:
-            self.current_token = None
+            self.current_token = self.eof_token
         return self.current_token  
 
     # R1
@@ -20,19 +27,22 @@ class Parser:
 
         self.opt_function_definitions()
 
-        if self.current_token.value == "@" and self.current_token is not None:
+        if self.current_token.value == "@":
             self.next_token()
         else:
             raise SyntaxError("Expected @")
         
         self.opt_declaration_list()
 
-        if self.current_token.value == "@" and self.current_token is not None:
+        if self.current_token.value == "@":
             self.next_token()
         else:
             raise SyntaxError("Expected @")
 
         self.statement_list()
+
+        if self.current_token.type != TokenT.EOF:
+            raise SyntaxError("Expected end of input")
 
     # R2
     def opt_function_definitions(self):
@@ -96,7 +106,7 @@ class Parser:
 
     # R8
     def qualifier(self):
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.next_token()
         else:
             raise SyntaxError("Expected qualifier")
@@ -117,7 +127,7 @@ class Parser:
 
     # R10
     def opt_declaration_list(self):
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.declaration_list()
         else:
             self.empty()
@@ -131,7 +141,7 @@ class Parser:
         else:
             raise SyntaxError("Expected ;")
 
-        if self.current_token.value in ["integer", "Boolean", "real"]:
+        if self.current_token.value in ["integer", "boolean", "real"]:
             self.declaration_list()
 
     # R12
@@ -303,7 +313,7 @@ class Parser:
         else:
             raise SyntaxError("Expected ;")
 
-    # R22: <While> -> while ( <Condition> ) <Statement>
+    # R22
     def p_while(self):
         if self.current_token is not None and self.current_token.value == "while":
             self.next_token()
@@ -326,25 +336,25 @@ class Parser:
             raise SyntaxError("Expected Statement")
         self.statement()
 
-    # R23: <Condition> -> <Expression> <Relop> <Expression>
+    # R23
     def condition(self):
         self.expression()
         self.relop()
         self.expression()
 
-    # R24: <Relop> -> == | != | > | < | <= | >=
+    # R24
     def relop(self):
         if self.current_token is not None and self.current_token.value in ["==", "!=", ">", "<", "<=", ">="]:
             self.next_token()
         else:
             raise SyntaxError("Expected relational operator")
 
-    # R25a: <Expression> -> <Term> <Expression Prime>
+    # R25a
     def expression(self):
         self.term()
         self.expression_prime()
 
-    # R25b: <Expression Prime> -> + <Term> <Expression Prime> | - <Term> <Expression Prime> | empty
+    # R25b
     def expression_prime(self):
         if self.current_token is not None and self.current_token.value in ["+", "-"]:
             self.next_token()
@@ -353,12 +363,12 @@ class Parser:
         else:
             self.empty()
 
-    # R26a: <Term> -> <Factor> <Term Prime>
+    # R26a
     def term(self):
         self.factor()
         self.term_prime()
 
-    # R26b: <Term Prime> -> * <Factor> <Term Prime> | / <Factor> <Term Prime> | empty
+    # R26b
     def term_prime(self):
         if self.current_token is not None and self.current_token.value in ["*", "/"]:
             self.next_token()
@@ -367,13 +377,13 @@ class Parser:
         else:
             self.empty()
 
-    # R27: <Factor> -> - <Primary> | <Primary>
+    # R27
     def factor(self):
         if self.current_token is not None and self.current_token.value == "-":
             self.next_token()
         self.primary()
 
-    # R28: <Primary> -> Identifier [ ( <IDs> ) ] | Integer | ( <Expression> ) | Real | true | false
+    # R28
     def primary(self):
         if self.current_token is None:
             raise SyntaxError("Expected primary")
@@ -384,8 +394,6 @@ class Parser:
             if self.current_token is not None and self.current_token.value == "(":
                 self.next_token()
 
-                # A function call requires a nonempty list of identifiers.
-                # Check EOF here as well as between comma-separated IDs.
                 while True:
                     if self.current_token is not None and self.current_token.type == TokenT.IDENTIFIER:
                         self.next_token()
