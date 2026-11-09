@@ -1,4 +1,9 @@
-hello321
+@
+integer x;
+@
+x = 10 + 5;
+put(x);
+
 schOol
 one two three
 1password1

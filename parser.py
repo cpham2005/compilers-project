@@ -7,7 +7,7 @@ class Parser:
         self.current_token = None
         self.output = []
 
-    def next_token(self):=
+    def next_token(self):
         self.current_token = self.lexer.next_token()
 
         if self.current_token.type != TokenT.EOF:
@@ -19,7 +19,7 @@ class Parser:
         return self.current_token
 
     def production(self, text):
-        self.output.append(text)
+        self.output.append(f"   {text}")
 
     # R1
     def rat26f(self):
