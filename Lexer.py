@@ -13,7 +13,7 @@ class TokenT(Enum):
 SEPARATORS = {":", ";", "(", ")", "@", ",", "{", "}"}
 OPERATORS = {"==", "!=", ">", "<", "<=", ">=", "+", "-", "*", "/"}
 KEYWORDS = {"true", "false", "if", "put", "return", "get", "integer",
-            "Boolean", "function", "real", "while", "fi", "else"}
+            "boolean", "function", "real", "while", "fi", "else"}
 
 class Token:
     def __init__(self, type, value):

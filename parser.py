@@ -2,7 +2,7 @@
 from Lexer import *
 
 class Parser:
-    def __init__(self, lexer):=
+    def __init__(self, lexer):
         self.lexer = lexer
         self.current_token = None
         self.output = []
