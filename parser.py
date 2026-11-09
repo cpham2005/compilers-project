@@ -43,7 +43,7 @@ class Parser:
         self.statement_list()
 
         if self.current_token.type != TokenT.EOF:
-            raise SyntaxError("Unexpected input after program")
+            raise SyntaxError("Expected end of input")
 
     # R2
     def opt_function_definitions(self):

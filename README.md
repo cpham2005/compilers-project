@@ -12,5 +12,4 @@
 ## 11/8 Syntax Analyzer (parser)
 - Rewrite grammar Rat26F to remove left recursion
 - print out all productions rules used for analyzing the token
-
 - Error handling: if syntax error occurs, print meaningful error message 

@@ -62,6 +62,16 @@ class Lexer:
             while self.char != "" and self.char.isdigit():
                 text += self.char
                 self.read_char()
+
+        #reads for letters or underscores immediately following int
+        if self.char.isalpha() or self.char == "_":
+            while self.char != "" and (
+                self.char.isalnum() or self.char == "_"
+            ):
+                text += self.char
+                self.read_char()
+            return Token(TokenT.UNKNOWN,text)
+
         if "." in text:
             return Token(TokenT.REAL, text)
         return Token(TokenT.INTEGER, text)
@@ -78,10 +88,17 @@ class Lexer:
             return Token(TokenT.OPERATOR, initial)
 
         if initial == "!":
-            while self.char != "" and self.char != "!":     # comments enclosed with ! are skipped
-                self.read_char()        # skip character inside !
-            self.read_char()            # skip the last !
-            return self.next_token()    # return no name token since comment are not labeled
+            text = initial
+
+            while self.char != "" and self.char != "!":  # comments enclosed with ! are skipped
+                text += self.char
+                self.read_char()  # skip character inside !
+
+            if self.char == "":
+                return Token(TokenT.UNKNOWN, text)
+
+            self.read_char()  # skip the last !
+            return self.next_token()  # skip comment and get next token
 
 # looping and labeling characters
     def next_token(self):
